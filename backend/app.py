@@ -10,7 +10,7 @@ load_dotenv()
 
 token = os.environ["GITHUB_TOKEN"]
 endpoint = "https://models.github.ai/inference"
-model = "openai/gpt-5"
+model = "openai/gpt-4o"
 
 client = OpenAI(
     base_url=endpoint,
@@ -25,10 +25,7 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:3000",  # In case you're using different port
-        "http://127.0.0.1:3000"
+        "*"
     ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
@@ -83,11 +80,18 @@ async def generatestrategy(request: Request):
         max_tokens=2000,
         temperature=0.7
     )
-    raw_strategy = response.choices[0].message.content
-    clean_strategy = re.sub(r'#+ ', '', raw_strategy)
+    # raw_strategy = response.choices[0].message.content
+    # clean_strategy = re.sub(r'#+ ', '', raw_strategy)
     
-    # Remove bullets (- or *)
-    clean_strategy = re.sub(r'^[-*]\s+', '', clean_strategy, flags=re.MULTILINE)
+    # # Remove bullets (- or *)
+    # clean_strategy = re.sub(r'^[-*]\s+', '', clean_strategy, flags=re.MULTILINE)
+    raw_strategy = response.choices[0].message.content
+
+# Remove markdown headings, bullets, bold/italics
+    clean_strategy = re.sub(r'#+ ', '', raw_strategy)   # remove ##
+    clean_strategy = re.sub(r'\*\*(.*?)\*\*', r'\1', clean_strategy)  # bold
+    clean_strategy = re.sub(r'\*(.*?)\*', r'\1', clean_strategy)      # italics
+    clean_strategy = re.sub(r'^[-*]\s+', '', clean_strategy, flags=re.MULTILINE)  # bullets
     return {
         "business_type": business_type,
         "budget": budget,
@@ -98,43 +102,9 @@ async def generatestrategy(request: Request):
 
 # Debug/Test run (optional)
 if __name__ == "__main__":
-    # response = client.chat.completions.create(
-    #     model=model,
-    #     messages=[
-    #         {"role": "system", "content": SYSTEM},
-    #         {"role": "user", "content": "Suggest a digital marketing strategy for a SaaS startup with $10,000 budget."}
-    #     ]
-    # )
-    # print(response.choices[0].message.content)
-    uvicorn.run("app:app", host="127.0.0.1", port=5000, reload=True)
+    
+    # uvicorn.run("app:app", host="127.0.0.1", port=5000, reload=True)
     # generatestrategy()
+    port = int(os.environ.get("PORT", 8000))  # Render gives PORT
+    uvicorn.run(app, host="0.0.0.0", port=port)
 
-# import os
-# from openai import OpenAI
-# from dotenv import load_dotenv
-
-# load_dotenv()
-# token =  os.en
-# endpoint = "https://models.github.ai/inference"
-# model = "openai/gpt-4o"
-
-# client = OpenAI(
-#     base_url=endpoint,
-#     api_key=token,
-# )
-
-# response = client.chat.completions.create(
-#     messages=[
-#         {
-#             "role": "system",
-#             "content": "",
-#         },
-#         {
-#             "role": "user",
-#             "content": "What is the capital of France?",
-#         }
-#     ],
-#     model=model
-# )
-
-# print(response.choices[0].message.content)
