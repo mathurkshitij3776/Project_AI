@@ -1,113 +1,3 @@
-<!-- 
-<script>
-import axios from 'axios';
-
-export default {
-  data() {
-    return {
-      formdata: {
-        business_type:"",
-        budget:"", 
-        target_audience:"",
-        productdescription:"",
-        strategy:"" 
-      }
-    }
-  },
-  methods: {
-    senddata() {
-      
-      axios.post('http://127.0.0.1:5000/api/generatestrategy', JSON.stringify(this.formdata), {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*"
-        }
-      })
-      .then(res => {
-        
-        this.formdata.strategy = res.data.strategy;
-          })
-      .catch(err => {
-        this.error = err.response?.data?.message;    //|| "Login failed"
-      });
-    }
-  }
-}
-
-
-</script>
-
-
-<template>
-  <h1 class="display-4 text-center text-decoration-underline"></h1>
-  <span>
-  <div>
-  <div class="container">
-    <div class="box">
-      <div class="login_form">
-        <h2 style="padding-bottom: 0px; text-align:center"></h2>
-
-        <form @submit.prevent="loginuser">
-          <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">business_type</label>
-            <input type="email" class="form-control" v-model="formdata.business_type" id="exampleInputEmail1" aria-describedby="emailHelp" required>
-            <div id="emailHelp" class="form-text"></div>
-          </div>
-          <div class="mb-3">
-            <label for="exampleInputtext1" class="form-label">budget</label>
-            <input type="text" class="form-control" v-model="formdata.budget" id="exampleInputPassword1" required>
-          </div>
-          <div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Target audience</label>
-            <input type="text" class="form-control" v-model="formdata.target_audience" id="exampleInputPassword1" required>
-          </div><div class="mb-3">
-            <label for="exampleInputPassword1" class="form-label">Prodcut description</label>
-            <input type="text" class="form-control" v-model="formdata.productdescription" id="exampleInputPassword1" required>
-          </div>
-
-          <div style="text-align: center; padding:15px">
-            <input type="submit" class="btn btn-success" value="Generate Strategy">
-          </div>
-
-          <p v-if="error" style="text-align: center; color: red;">{{ error }}</p>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-    <div>
-  <div class="mb-3 strategy">
-            <label for="exampleInputPassword1" class="form-label">Strategy</label>
-            <input type="text-area" class="form-control" v-model="formdata.strategy" id="exampleInputPassword1" required>
-          </div>
-          </div>
-          </span>
-</template>
-
-
-<style scoped>
-.login_form{
-    border: 1px solid  grey;
-    padding: 20px;
-    height: 600px;
-    width: 300px;
-    margin-left: 0px;
-    padding-bottom: 0px;
-    border-radius: 0;
-    
-
-}
-.strategy{
-    border: 1px solid  grey;
-    padding: 20px;
-    height: 600px;
-    width: 600px;
-    margin-left: 100px;
-    padding-bottom: 0px;
-    border-radius: 0;
-}
-</style> -->
-
 <script>
 import axios from 'axios';
 
@@ -122,6 +12,11 @@ export default {
         strategy: "" 
       },
       error: ""
+    }
+  },
+ computed: {
+    renderedStrategy() {
+      return marked(this.formdata.strategy || "");
     }
   },
   methods: {
