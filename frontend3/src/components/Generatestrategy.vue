@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     senddata() {
-      axios.post('http://127.0.0.1:5000/api/generatestrategy', JSON.stringify(this.formdata), {
+      axios.post('https://project-ai-umxu.onrender.com/api/generatestrategy', JSON.stringify(this.formdata), {
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*"
