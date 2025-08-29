@@ -52,6 +52,62 @@ class StrategyResponse(BaseModel):
     product_description: str
     strategy: str
 
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+import os
+from openai import OpenAI
+from dotenv import load_dotenv
+from pydantic import BaseModel
+import uvicorn
+import re
+
+load_dotenv()
+
+# Get environment variables
+token = os.environ.get("GITHUB_TOKEN")
+endpoint = "https://models.github.ai/inference"
+model = "openai/gpt-4o"
+
+client = OpenAI(
+    base_url=endpoint,
+    api_key=token,
+)
+
+app = FastAPI()
+
+# CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["*"],
+)
+
+SYSTEM = (
+    "You are a world-class Marketing Strategist who has consulted businesses "
+    "of all sizes and scales. You specialize in creating digital marketing strategies "
+    "that help companies grow and scale effectively. Provide clear, actionable strategies "
+    "without any special formatting or decorative characters."
+)
+
+class StrategyRequest(BaseModel):
+    business_type: str
+    budget: str
+    target_audience: str
+    productdescription: str
+
+class StrategyResponse(BaseModel):
+    business_type: str
+    budget: str
+    target_audience: str
+    product_description: str
+    strategy: str
+
+
+@app.get("/")
+async def root():
+    return {"message": "Digital Marketing Strategy Generator API", "status": "running"}
 
 @app.post("/api/generatestrategy")
 async def generatestrategy(request: Request):
