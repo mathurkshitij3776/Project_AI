@@ -31,6 +31,8 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
+
+
 SYSTEM = (
     "You are a world-class Marketing Strategist who has consulted businesses "
     "of all sizes and scales. You specialize in creating digital marketing strategies "
