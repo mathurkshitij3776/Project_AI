@@ -105,8 +105,8 @@ async def generatestrategy(request: Request):
 # Debug/Test run (optional)
 if __name__ == "__main__":
     
-    # uvicorn.run("app:app", host="127.0.0.1", port=5000, reload=True)
+    uvicorn.run("app:app", host="127.0.0.1", port=5000, reload=True)
     # generatestrategy()
-    port = int(os.environ.get("PORT", 5000))  # Render gives PORT
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    # port = int(os.environ.get("PORT", 5000))  # Render gives PORT
+    # uvicorn.run(app, host="0.0.0.0", port=port)
 
